@@ -3,6 +3,11 @@
 
 //Array of products
 Product.allProducts = [];
+
+//Variables in use
+var productOne = document.getElementById('productOne');
+var productTwo = document.getElementById('productTwo');
+var productThree = document.getElementById('productThree');
 var productSets = [];
 
 function Product(name, filepath) {
@@ -37,33 +42,26 @@ new Product('Wine Glass', 'img/wine-glass.jpg');
 
 //Event Listener
 
-var productOne = document.getElementById('productOne');
-var productTwo = document.getElementById('productTwo');
-
 productOne.addEventListener('click', randomProduct);
 productTwo.addEventListener('click', randomProduct);
 productThree.addEventListener('click', randomProduct);
 
 //Randomly display products
 
-// function randomSet () {
-//   while(productSets.length < 3){
-//     var randomNumber = Math.ceil(Math.random() * Product.allProducts.length);
-//     if(productSets.indexOf(randomNumber) > -1) continue;
-//     productSets[productSets.length] = randomNumber;
-//   }
-// }
+function randomSet() {
+  productSets = [];
+  while(productSets.length < 3){
+    var randomNumber = Math.floor(Math.random() * Product.allProducts.length);
+    if(productSets.indexOf(randomNumber) > - 1) continue;
+    productSets.push(randomNumber);
+  }
+}
 
 function randomProduct() {
-  while(productSets.length < 3){
-    var randomNumber = Math.ceil(Math.random() * 19);
-    if(productSets.indexOf(randomNumber) > -1) continue;
-    productSets[productSets.length] = randomNumber;
-  }
+  randomSet();
   productOne.src = Product.allProducts[productSets[0]].filepath;
   productTwo.src = Product.allProducts[productSets[1]].filepath;
   productThree.src = Product.allProducts[productSets[2]].filepath;
-  // productSets.push(randomIndex);
 }
 
 randomProduct();

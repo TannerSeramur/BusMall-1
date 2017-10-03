@@ -23,7 +23,8 @@ p {
 }
 
 img {
-  width: 200px;
+  max-width: 200px;
+  max-height: 200px;
   display: inline-block;
   margin-left: 100px;
   margin-top: 50px;
@@ -33,5 +34,5 @@ img {
 footer {
   height: 200px;
   background-image: url('img/monobackground.jpg');
-  margin-top: 125px;
+  margin-top: 150px;
 }

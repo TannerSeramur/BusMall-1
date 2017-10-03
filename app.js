@@ -3,19 +3,25 @@
 
 //Array of products
 Product.allProducts = [];
+Product.activeSet = [];
+Product.lastDisplayed = [];
+Product.totalVotes = 25;
 
-//Variables in use
+//Products Section
+Product.section = document.getElementById('productsSection');
+
+//Results Element
+Product.resultsList = document.getElementById('results');
+
+//Referring to specific images
 var productOne = document.getElementById('productOne');
 var productTwo = document.getElementById('productTwo');
 var productThree = document.getElementById('productThree');
-var activeSet = [];
-// var excludeSet = [];
-var votes = 25;
 
 function Product(name, filepath) {
   this.name = name;
   this.filepath = filepath;
-  this.clicks = 0;
+  this.votes = 0;
   this.views = 0;
   Product.allProducts.push(this);
 }
@@ -42,45 +48,62 @@ new Product('Tentacle USB', 'img/usb.gif');
 new Product('Watering Can', 'img/water-can.jpg');
 new Product('Wine Glass', 'img/wine-glass.jpg');
 
-//Event Listener
-
-productOne.addEventListener('click', randomProduct);
-productTwo.addEventListener('click', randomProduct);
-productThree.addEventListener('click', randomProduct);
 
 //Randomly display products
 
-function randomSet() {
-  activeSet = [];
-  while(activeSet.length < 3){
-    var randomNumber = Math.floor(Math.random() * Product.allProducts.length);
-    // if (randomNumber == excludeSet[i])
-    if(activeSet.indexOf(randomNumber) > - 1) continue;
-    activeSet.push(randomNumber);
-  }
-}
-
 function randomProduct() {
-  randomSet();
-  productOne.src = Product.allProducts[activeSet[0]].filepath;
-  productTwo.src = Product.allProducts[activeSet[1]].filepath;
-  productThree.src = Product.allProducts[activeSet[2]].filepath;
+  var randomOne = Math.floor(Math.random() * Product.allProducts.length);
+  var randomTwo = Math.floor(Math.random() * Product.allProducts.length);
+  var randomThree = Math.floor(Math.random() * Product.allProducts.length);
 
-  Product.allProducts[activeSet[0]].views++;
-  Product.allProducts[activeSet[1]].views++;
-  Product.allProducts[activeSet[2]].views++;
-  votes--;
+  //Confirm there are no duplicate images, and if there are, reroll
+  while(Product.lastDisplayed.includes(randomOne) || Product.lastDisplayed.includes(randomTwo) || Product.lastDisplayed.includes(randomThree) || randomOne === randomTwo || randomTwo == randomThree || randomThree == randomOne) {
+    randomOne = Math.floor(Math.random() * Product.allProducts.length);
+    randomTwo = Math.floor(Math.random() * Product.allProducts.length);
+    randomThree = Math.floor(Math.random() * Product.allProducts.length);
+  }
+
+  // Update images
+  productOne.src = Product.allProducts[randomOne].filepath;
+  productTwo.src = Product.allProducts[randomTwo].filepath;
+  productThree.src = Product.allProducts[randomThree].filepath;
+
+  // Increments views for all images
+  Product.allProducts[randomOne].views++;
+  Product.allProducts[randomTwo].views++;
+  Product.allProducts[randomThree].views++;
+
+  Product.lastDisplayed[0] = randomOne;
+  Product.lastDisplayed[1] = randomTwo;
+  Product.lastDisplayed[2] = randomThree;
 }
 
-//Trying to trigger the event listeners to disable after 25 votes :( Not working. Also tried some loops. 
-if (votes == 0) {
-  productOne.removeEventListener('click', randomProduct);
-  productTwo.removeEventListener('click', randomProduct);
-  productThree.removeEventListener('click', randomProduct);
+//Event Handler function
+function newSet (event) {
+
+  if (event.target.id === 'productsSection') {
+    return alert('Please click on an image.');
+
+  }
+//Decrement total available votes
+  Product.totalVotes--;
+
+  //Count individual product votes
+  console.log('event.target', event.target.src);
+  for(var i = 0; i < Product.allProducts.length; i++) {
+    if(event.target.src === Product.allProducts[i].filepath) {
+      Product.allProducts[i].votes += 1;
+    }
+  }
+//Disable event listeners
+  if (Product.totalVotes < 1) {
+    Product.section.removeEventListener('click', newSet);
+  }
+//Give a new set of products
+  randomProduct();
 }
 
+//Event Listener
+Product.section.addEventListener('click', newSet);
 
 randomProduct();
-console.log(activeSet);
-console.log(Product.allProducts);
-// console.log(excludeSet);

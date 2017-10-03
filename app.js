@@ -10,7 +10,7 @@ var productTwo = document.getElementById('productTwo');
 var productThree = document.getElementById('productThree');
 var activeSet = [];
 // var excludeSet = [];
-var votes = 0;
+var votes = 25;
 
 function Product(name, filepath) {
   this.name = name;
@@ -69,17 +69,15 @@ function randomProduct() {
   Product.allProducts[activeSet[0]].views++;
   Product.allProducts[activeSet[1]].views++;
   Product.allProducts[activeSet[2]].views++;
+  votes--;
 }
 
-//Disaster function below, abandon all hope ye who continue reading
-// While loop dies after one click, somehow increments straight to zero. For loop does the same. Do/while just lets you keep clicking into eternity.
-
-// function vote () {
-//   while (votes < 25) {
-//     randomProduct();
-//     votes++;
-//   }
-// }
+//Trying to trigger the event listeners to disable after 25 votes :( Not working. Also tried some loops. 
+if (votes == 0) {
+  productOne.removeEventListener('click', randomProduct);
+  productTwo.removeEventListener('click', randomProduct);
+  productThree.removeEventListener('click', randomProduct);
+}
 
 
 randomProduct();

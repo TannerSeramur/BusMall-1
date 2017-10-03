@@ -8,7 +8,9 @@ Product.allProducts = [];
 var productOne = document.getElementById('productOne');
 var productTwo = document.getElementById('productTwo');
 var productThree = document.getElementById('productThree');
-var productSets = [];
+var activeSet = [];
+// var excludeSet = [];
+var votes = 0;
 
 function Product(name, filepath) {
   this.name = name;
@@ -49,20 +51,38 @@ productThree.addEventListener('click', randomProduct);
 //Randomly display products
 
 function randomSet() {
-  productSets = [];
-  while(productSets.length < 3){
+  activeSet = [];
+  while(activeSet.length < 3){
     var randomNumber = Math.floor(Math.random() * Product.allProducts.length);
-    if(productSets.indexOf(randomNumber) > - 1) continue;
-    productSets.push(randomNumber);
+    // if (randomNumber == excludeSet[i])
+    if(activeSet.indexOf(randomNumber) > - 1) continue;
+    activeSet.push(randomNumber);
   }
 }
 
 function randomProduct() {
   randomSet();
-  productOne.src = Product.allProducts[productSets[0]].filepath;
-  productTwo.src = Product.allProducts[productSets[1]].filepath;
-  productThree.src = Product.allProducts[productSets[2]].filepath;
+  productOne.src = Product.allProducts[activeSet[0]].filepath;
+  productTwo.src = Product.allProducts[activeSet[1]].filepath;
+  productThree.src = Product.allProducts[activeSet[2]].filepath;
+
+  Product.allProducts[activeSet[0]].views++;
+  Product.allProducts[activeSet[1]].views++;
+  Product.allProducts[activeSet[2]].views++;
 }
 
+//Disaster function below, abandon all hope ye who continue reading
+// While loop dies after one click, somehow increments straight to zero. For loop does the same. Do/while just lets you keep clicking into eternity.
+
+// function vote () {
+//   while (votes < 25) {
+//     randomProduct();
+//     votes++;
+//   }
+// }
+
+
 randomProduct();
-console.log(productSets);
+console.log(activeSet);
+console.log(Product.allProducts);
+// console.log(excludeSet);

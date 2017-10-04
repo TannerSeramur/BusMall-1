@@ -36,3 +36,11 @@ footer {
   background-image: url('img/monobackground.jpg');
   margin-top: 150px;
 }
+
+ul li {
+  list-style: none;
+}
+
+canvas {
+  margin-left: 200px;
+}

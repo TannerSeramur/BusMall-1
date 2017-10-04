@@ -7,6 +7,10 @@ Product.activeSet = [];
 Product.lastDisplayed = [];
 Product.totalVotes = 25;
 
+//Arrays to hold data for the chart
+var votes = [];
+var names = [];
+
 //Products Section
 Product.section = document.getElementById('productsSection');
 
@@ -97,23 +101,116 @@ function newSet (event) {
   for(var i = 0; i < Product.allProducts.length; i++) {
     if(event.target.altText === Product.allProducts[i].altText) {
       Product.allProducts[i].votes++;
+      updateChartArrays();
     }
   }
 
   if (Product.totalVotes < 1) {
     Product.section.removeEventListener('click', newSet);
-    showStats();
+    productsSection.innerHTML = '';
+    drawChart();
   }
   randomProduct();
 }
 //Function to display statys
-function showStats() {
-  for(var i = 0; i < Product.allProducts.length; i++) {
-    var liEl = document.createElement('li');
-    liEl.textContent = Product.allProducts[i].name + ' got ' + Product.allProducts[i].votes + ' votes out of ' + Product.allProducts[i].views + ' times displayed.';
-    Product.resultsList.appendChild(liEl);
+// function showStats() {
+//   for(var i = 0; i < Product.allProducts.length; i++) {
+//     var liEl = document.createElement('li');
+//     liEl.textContent = Product.allProducts[i].name + ' got ' + Product.allProducts[i].votes + ' votes out of ' + Product.allProducts[i].views + ' times displayed.';
+//     Product.resultsList.appendChild(liEl);
+//   }
+// }
+
+//Update data arrays for chart
+function updateChartArrays() {
+  for (var i = 0; i < Product.allProducts.length; i++) {
+    names[i] = Product.allProducts[i].name;
+    votes[i] = Product.allProducts[i].votes;
   }
 }
+
+//Chart Stuff
+var data = {
+  labels: names,
+  datasets: [
+    {
+      data: votes,
+      backgroundColor: [
+        'darkred',
+        'crimson',
+        'orangered',
+        'orange',
+        'coral',
+        'gold',
+        'yellow',
+        'chartreuse',
+        'turquoise',
+        'teal',
+        'paleturquoise',
+        'skyblue',
+        'cornflowerblue',
+        'royalblue',
+        'slateblue',
+        'mediumorchid',
+        'darkviolet',
+        'indigo',
+        'darkmagenta',
+        'deeppink'
+
+      ],
+      hoverBackgroundColor: [
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon',
+        'lemonchiffon'
+      ]
+    }]
+};
+
+function drawChart() {
+  var ctx = document.getElementById('productStats').getContext('2d');
+  songChart = new Chart(ctx,{
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: false,
+      animation: {
+        duration: 1000,
+        easing: 'easeOutBounce'
+      }
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          max: 20,
+          min: 0,
+          stepSize: 1.0
+        }
+      }]
+    }
+  });
+  chartDrawn = true;
+}
+
+// function hideChart() {
+//   document.getElementById('funky-chart').hidden = true;
+// }
 
 //Event Listener
 Product.section.addEventListener('click', newSet);

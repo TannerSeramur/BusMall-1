@@ -22,6 +22,13 @@ var productOne = document.getElementById('productOne');
 var productTwo = document.getElementById('productTwo');
 var productThree = document.getElementById('productThree');
 
+//Retrieving data from local storage
+if (localStorage.getItem('storedProducts') === null) {
+  localStorage.setItem('storedProducts', JSON.stringify(Product.allProducts));
+} else {
+  Product.allProducts.votes = JSON.parse(localStorage.getItem('storedProducts'));
+}
+
 function Product(name, filepath, altText) {
   this.name = name;
   this.filepath = filepath;
@@ -108,11 +115,12 @@ function newSet (event) {
   if (Product.totalVotes < 1) {
     Product.section.removeEventListener('click', newSet);
     productsSection.innerHTML = '';
+    localStorage.setItem('storedProducts', JSON.stringify(Product.allProducts));
     drawChart();
   }
   randomProduct();
 }
-//Function to display statys
+//Function to display stats
 // function showStats() {
 //   for(var i = 0; i < Product.allProducts.length; i++) {
 //     var liEl = document.createElement('li');
@@ -134,6 +142,7 @@ var data = {
   labels: names,
   datasets: [
     {
+      label: 'Votes out of 25',
       data: votes,
       backgroundColor: [
         'darkred',
@@ -156,8 +165,8 @@ var data = {
         'indigo',
         'darkmagenta',
         'deeppink'
-
       ],
+
       hoverBackgroundColor: [
         'lemonchiffon',
         'lemonchiffon',
@@ -185,7 +194,7 @@ var data = {
 
 function drawChart() {
   var ctx = document.getElementById('productStats').getContext('2d');
-  songChart = new Chart(ctx,{
+  productChart = new Chart(ctx,{
     type: 'bar',
     data: data,
     options: {

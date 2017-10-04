@@ -208,9 +208,6 @@ function drawChart() {
   chartDrawn = true;
 }
 
-// function hideChart() {
-//   document.getElementById('funky-chart').hidden = true;
-// }
 
 //Event Listener
 Product.section.addEventListener('click', newSet);
